@@ -8,6 +8,7 @@ a back, two sides and a lid, with a stacked tenon, collar and foot.
     python3 uilleann_chanter.py --plate=2.9 ...        # for ply as measured
     python3 uilleann_chanter.py --kerf=0.18 ...        # for that kerf
     python3 uilleann_chanter.py --tenon=18 ...         # the tenon for your stock
+    python3 uilleann_chanter.py --page-to=turn.html    # the 3D view
 
 THE REFERENCE is Craig Fischer's "Make a Square Uilleann Pipe Chanter"
 (1997, hosted by David Daye at daye1.com/bagpage/makepipe/squint1.html): a
@@ -402,9 +403,59 @@ def svg_sheet(k, nsh, sh):
     return txt
 
 
+def placed(p, info):
+    """Where a part sits: the chanter's x down its length, y from the lid
+    (-y) to the back, z across. A plate's x across, y, z through, to z, y, x;
+    a strip's x along it, y across its centre line, w through from the bore
+    out, its face leaning with the cone."""
+    if p.kind != 'strip':
+        return [[0, 0, 1, p.x], [0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 0, 1]]
+    t, X = info['t'], info['x0']
+    h0, kh = side(X) / 2, (side(X + 1) - side(X)) / 2      # the half-face, and its lean
+    off = h0 + p.layer * t
+    return {
+        'lid': [[1, 0, 0, X], [-kh, 0, -1, -off], [0, 1, 0, 0], [0, 0, 0, 1]],
+        'back': [[1, 0, 0, X], [kh, 0, 1, off], [0, -1, 0, 0], [0, 0, 0, 1]],
+        'left': [[1, 0, 0, X], [0, 1, 0, 0], [kh, 0, 1, h0], [0, 0, 0, 1]],
+        'right': [[1, 0, 0, X], [0, -1, 0, 0], [-kh, 0, -1, -h0], [0, 0, 0, 1]],
+    }[p.strip]
+
+
+def page(path_out):
+    """The 3D view: the strips darker, every part the cut file's outline;
+    Explode pulls the lid and back layers and the sides outward and the
+    plates apart along the chanter."""
+    sys.path.insert(0, os.path.join(HERE, '..', 'lasermade-tools'))
+    import turn3d as t3
+    parts, info = build()
+    mid = REF_SOLE / 2
+    out = []
+    for p in parts:
+        holes = [c[1] if c[0] == 'poly' else circle(c[1], c[2], c[3], 20) for c in p.cuts]
+        if p.kind == 'strip':
+            k = p.layer + 1
+            ex = {'lid': (0, -0.15 * k, 0), 'back': (0, 0.15 * k, 0),
+                  'left': (0, 0, 0.15), 'right': (0, 0, -0.15)}[p.strip]
+        else:
+            ex = ((p.x - mid) / 60, 0, 0)
+        wood = 'dark' if p.kind == 'strip' else 'ply'
+        out.append(t3.placed({'o': p.outline, 'h': holes, 'e': []}, placed(p, info), ex, wood))
+    t3.write(path_out, 'Uilleann chanter in 3D',
+             {'square bore': {'parts': out, 'ex': 60, 'view': [-0.12, 0.32, 3.0]}},
+             'Drag to turn; right-drag, shift-drag or move two fingers to slide the view; '
+             'scroll or pinch to zoom in on whatever is under the pointer; double-click a part '
+             'to turn round it, and Reset view to go back. Draw Explode to pull the strips outward and '
+             'the plates apart along the chanter. Every part is the cut file’s own outline. '
+             'The strips, darker, taper with the cone: wider toward the sole. The lid, three '
+             'layers, carries the seven finger holes; the back, two layers, the thumb’s. '
+             'At the top, the tenon and the wider collar, then the socket the strips stand in; '
+             'at the sole, the foot.',
+             'uilleann_chanter.py')
+
+
 def main():
     global KERF, TENON_D
-    out, write = None, True
+    out, write, page_to = None, True, None
     for x in sys.argv[1:]:
         if x == '--no-write':
             write = False
@@ -416,9 +467,15 @@ def main():
             KERF = P.KERF = SF.set_kerf(x)
         elif x.startswith('--tenon='):
             TENON_D = float(x.split('=', 1)[1])
+        elif x.startswith('--page-to='):
+            page_to = x.split('=', 1)[1]
         else:
             raise SystemExit(f'error: {x} is not a flag this generator reads. It takes --out=, '
-                             f'--plate=, --kerf=, --tenon= and --no-write.')
+                             f'--plate=, --kerf=, --tenon=, --page-to= and --no-write.')
+    if page_to:
+        page(page_to)
+        print(f'  wrote {os.path.basename(page_to)}')
+        return 0
     if write and not out:
         raise SystemExit('error: --out=DIR, or --no-write to run the checks only.')
     parts, info = build()

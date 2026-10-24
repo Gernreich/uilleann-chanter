@@ -2,6 +2,14 @@
 
 **[← All projects](https://gernreich.github.io/)**
 
+<!-- readme-only -->
+**[Read the writeup](https://gernreich.github.io/uilleann-chanter/)** ·
+**[Turn it in 3D](https://gernreich.github.io/uilleann-chanter/)**
+
+<!-- page-only **[Read the README](https://github.com/Gernreich/uilleann-chanter)** · **[Turn it in 3D on a page of its own](turn.html)** -->
+
+<!-- page-only <iframe src="turn.html?embed" title="The uilleann chanter as solid parts you can drag to turn and pull apart: a long, darker, tapering square tube of strips with seven holes along the front, a narrow round tenon and a wider collar at the narrow end, and a round foot at the wide end" style="width:100%;height:560px;border:0"></iframe> -->
+
 An uilleann pipe chanter in 3mm plywood: Craig Fischer's square chanter (1997), cut on
 a laser. Its conical bore is a tapering square made from four flat strips: a back, two
 sides and a lid. Fischer's article is
@@ -10,6 +18,22 @@ hosted by David Daye. This generator keeps his bore, his hole positions and his
 starting drill sizes, and engraves his starting bore enlargements. Tuning is still done by hand, his way.
 
 **It has not been cut or played yet.**
+
+<table>
+<tr>
+<td align="center"><a href="cut-files/uilleann-chanter-sheet1-cut-files.svg"><img src="previews/uilleann-chanter-sheet1-cut-files.svg" alt="A sheet of parts: seven long tapering strips, two with one hole near their narrow end, three with seven holes in a row and grey oval shading along the first of them, and two plain narrow ones; two large round plates and two smaller ones with a rectangular hole each; two round plates with a small teardrop hole and two pin holes; and twelve small round plates with a hole and two pin holes, the last two of them teardrop-shaped" width="100%"></a></td>
+</tr>
+<tr>
+<td align="center"><sub>the whole chanter on one 587 × 166mm sheet</sub></td>
+</tr>
+</table>
+
+Built for **[LaserMadeMusic](https://www.youtube.com/@LaserMadeMusic)**.
+
+**[The rest of the build files](https://gernreich.github.io/lasermademusic.html)** — every instrument,
+generator and tool, indexed.
+
+**[Download everything as a ZIP](https://github.com/Gernreich/uilleann-chanter/archive/refs/heads/main.zip)**
 
 ## The chanter
 

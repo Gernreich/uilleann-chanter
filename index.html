@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Uilleann chanter</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1a1c1e;--mut:#5b6067;--line:#e2e4e7;--card:#fff;--accent:#1d4ed8;
+--codebg:#f4f5f7;--thbg:#f0f1f3;--mark:#fff8c4}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e6e8ea;--mut:#9aa1a9;--line:#2b2f34;
+--card:#1b1e22;--accent:#7aa2f7;--codebg:#22262b;--thbg:#23272c;--mark:#4a411c}}
+:root[data-theme=dark]{--bg:#15171a;--fg:#e6e8ea;--mut:#9aa1a9;--line:#2b2f34;--card:#1b1e22;
+--accent:#7aa2f7;--codebg:#22262b;--thbg:#23272c;--mark:#4a411c}
+:root[data-theme=light]{--bg:#fbfbfa;--fg:#1a1c1e;--mut:#5b6067;--line:#e2e4e7;--card:#fff;
+--accent:#1d4ed8;--codebg:#f4f5f7;--thbg:#f0f1f3;--mark:#fff8c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:16px/1.62 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+-webkit-text-size-adjust:100%}
+.wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:44px;max-width:1180px;
+margin:0 auto;padding:40px 28px 96px}
+nav{position:sticky;top:28px;align-self:start;max-height:calc(100vh - 56px);overflow:auto;
+border-right:1px solid var(--line);padding-right:16px;font-size:13.5px;line-height:1.45}
+nav b{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);
+margin:0 0 12px}
+nav a{display:block;color:var(--mut);text-decoration:none;padding:3px 0;border-radius:4px}
+nav a:hover{color:var(--accent)}
+nav a.l1{color:var(--fg);font-weight:640;margin-top:11px}
+nav a.l2{padding-left:12px}
+main{min-width:0}
+h1{font-size:1.62rem;line-height:1.25;letter-spacing:-.015em;margin:2.4em 0 .5em;
+padding-bottom:.32em;border-bottom:2px solid var(--line)}
+main>h1:first-child{margin-top:0;border-bottom:none;font-size:1.95rem}
+h2{font-size:1.34rem;font-weight:680;margin:2.1em 0 .6em;letter-spacing:-.012em;
+padding:.1em 0 .1em .6em;border-left:4px solid var(--accent)}
+h3{font-size:1.02rem;font-weight:650;margin:1.7em 0 .45em}
+p{margin:.85em 0}
+ul,ol{margin:.85em 0;padding-left:1.35em}
+li{margin:.3em 0}
+/* A list with blank lines between its items is "loose", and pandoc wraps each item
+   in a <p> as GitHub does. These pages were set tight before pandoc, so they stay so. */
+li>p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+figure{margin:1.6em 0}
+/* A paragraph holding two or more images is a gallery. Left to inline layout they
+   wrap at whatever fits, which put three bells on one row and the fourth alone
+   underneath - directly above the caption, so it read as the caption for that one
+   picture rather than for the set. Flex lets them share the row instead. */
+p:has(img + img){display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;
+justify-content:center}
+p:has(img + img) img{flex:1 1 140px;min-width:0;width:auto;max-width:100%;height:auto;
+border:1px solid var(--line);border-radius:10px}
+figure svg,figure img{display:block;width:100%;max-width:100%;height:auto;
+border:1px solid var(--line);border-radius:10px}
+/* Any other image -- one inside a link, which is not a figure -- is held to the
+   column too. A cut-sheet preview linked to its cut file drew at its own size,
+   595mm wide, and ran off the page (square-flute, 2026-10-13). */
+img{max-width:100%;height:auto}
+a{color:var(--accent)}
+code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+background:var(--codebg);padding:.1em .32em;border-radius:4px;
+border:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+pre{background:var(--codebg);border:1px solid var(--line);border-radius:9px;
+padding:14px 16px;overflow-x:auto;margin:1.1em 0}
+pre code{background:none;border:0;padding:0;font-size:12.8px;line-height:1.62;white-space:pre}
+blockquote{margin:1.15em 0;padding:.7em 1.1em;border-left:4px solid var(--accent);
+background:var(--codebg);border-radius:0 7px 7px 0}
+blockquote p{margin:0}
+.tw{overflow-x:auto;margin:1.15em 0;border:1px solid var(--line);border-radius:9px;
+background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+/* honour align="center" on gallery cells: a presentation attribute loses to any
+   CSS rule, so the line above would silently left-align every thumbnail caption */
+td[align=center],th[align=center]{text-align:center}
+th{background:var(--thbg);font-weight:630;white-space:nowrap;font-size:13px;
+letter-spacing:.01em}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--thbg) 45%,transparent)}
+td code,th code{white-space:nowrap}
+/* A walk inside a link is one token: breaking it mid-walk put "N" at the end of one
+   line and "N5 U" at the start of the next, which reads as two things. */
+a code{white-space:nowrap}
+.tog{position:fixed;top:14px;right:14px;z-index:9;background:var(--card);color:var(--mut);
+border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:12.5px;cursor:pointer}
+.tog:hover{color:var(--accent)}
+/* Below 900px the contents list moves to the top of the page, and the fixed theme
+   button sat on top of its first lines. There it scrolls away with the page instead,
+   in a strip of padding kept free for it; fixed, it would ride over the text as the
+   page scrolls, since a narrow screen has no margin for it to sit in. */
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:20px;padding:62px 18px 72px}
+.tog{position:absolute}
+nav{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);
+padding:0 0 16px;columns:2;column-gap:20px}}
+@media print{nav,.tog{display:none}.wrap{display:block;max-width:none;padding:0}
+pre,.tw{break-inside:avoid}h1{break-after:avoid}}
+</style>
+</head>
+<body>
+<button class="tog" type="button">theme</button>
+<div class="wrap">
+<nav><b>Contents</b><a class="l1" href="#uilleann-chanter">Uilleann chanter</a><a class="l2" href="#the-chanter">The chanter</a><a class="l2" href="#building-it">Building it</a><a class="l2" href="#regenerating">Regenerating</a><a class="l2" href="#credit">Credit</a></nav>
+<main>
+<h1 id="uilleann-chanter">Uilleann chanter</h1>
+<p><strong><a href="https://gernreich.github.io/">← All projects</a></strong></p>
+<p><strong><a href="https://github.com/Gernreich/uilleann-chanter">Read the README</a></strong> · <strong><a href="turn.html">Turn it in 3D on a page of its own</a></strong></p>
+<iframe src="turn.html?embed" title="The uilleann chanter as solid parts you can drag to turn and pull apart: a long, darker, tapering square tube of strips with seven holes along the front, a narrow round tenon and a wider collar at the narrow end, and a round foot at the wide end" style="width:100%;height:560px;border:0"></iframe>
+
+<p>An uilleann pipe chanter in 3mm plywood: Craig Fischer's square chanter (1997), cut on a laser. Its conical bore is a tapering square made from four flat strips: a back, two sides and a lid. Fischer's article is <a href="https://www.daye1.com/bagpage/makepipe/squint1.html">Make a Square Uilleann Pipe Chanter</a>, hosted by David Daye. This generator keeps his bore, his hole positions and his starting drill sizes, and engraves his starting bore enlargements. Tuning is still done by hand, his way.</p>
+<p><strong>It has not been cut or played yet.</strong></p>
+<table>
+<tr>
+<td align="center"><a href="cut-files/uilleann-chanter-sheet1-cut-files.svg"><img src="previews/uilleann-chanter-sheet1-cut-files.svg" alt="A sheet of parts: seven long tapering strips, two with one hole near their narrow end, three with seven holes in a row and grey oval shading along the first of them, and two plain narrow ones; two large round plates and two smaller ones with a rectangular hole each; two round plates with a small teardrop hole and two pin holes; and twelve small round plates with a hole and two pin holes, the last two of them teardrop-shaped" width="100%"></a></td>
+</tr>
+<tr>
+<td align="center"><sub>the whole chanter on one 587 × 166mm sheet</sub></td>
+</tr>
+</table>
+
+<p>Built for <strong><a href="https://www.youtube.com/@LaserMadeMusic">LaserMadeMusic</a></strong>.</p>
+<p><strong><a href="https://gernreich.github.io/lasermademusic.html">The rest of the build files</a></strong> — every instrument, generator and tool, indexed.</p>
+<p><strong><a href="https://github.com/Gernreich/uilleann-chanter/archive/refs/heads/main.zip">Download everything as a ZIP</a></strong></p>
+<h2 id="the-chanter">The chanter</h2>
+<div class="tw">
+<table>
+<tbody>
+<tr>
+<td>Bore</td>
+<td>Fischer's square cone, 3.7mm square at the top to 11.5mm at the sole over 365mm, matching a Quinn chanter's cross-section. The strips start 42mm down at 4.60mm and end at 11.50mm</td>
+</tr>
+<tr>
+<td>Back</td>
+<td>2 layers glued face to face, 6mm, with the thumb's hole (back D)</td>
+</tr>
+<tr>
+<td>Sides</td>
+<td>1 layer each, exactly as wide as the bore, glued on the back's face</td>
+</tr>
+<tr>
+<td>Lid</td>
+<td>3 layers, 9mm, with the seven front holes. Fischer asks for at least 7mm, because a hole's depth sets its note. A deeper hole plays flatter, and you tune by opening holes, so the lid starts deep. Thin it over the holes from outside if a note won't come up</td>
+</tr>
+<tr>
+<td>Dishes</td>
+<td>Fischer's four starting bore enlargements, engraved in greyscale into the lid's bore layer (darker is deeper, black 1.5mm): 30–90mm 1.5mm deep, 112–162mm, 247–275mm and 311–355mm 1.2mm deep. Each is an oval dish, never closer than 0.3mm to the edge of the bore's face, so none runs under a side's glue line. The 30–42mm part sits above the strips and is cut instead, as a lobe on the front of 4 plates' bore holes</td>
+</tr>
+<tr>
+<td>Tenon</td>
+<td>12 round plates, 17mm across (<code>--tenon=</code> for your stock). The reed's seat steps down from 6.8mm to Fischer's 5.16mm (13/64in) throat. Ream it smooth</td>
+</tr>
+<tr>
+<td>Collar</td>
+<td>2 plates 30mm across, the stop Fischer suggests. The tenon and collar press-fit on two 2mm pins</td>
+</tr>
+<tr>
+<td>Socket</td>
+<td>2 plates the strips' top stands in. Leave them dry while you tune, and glue them when the lid goes on</td>
+</tr>
+<tr>
+<td>Foot</td>
+<td>2 plates 38mm across round the sole, the tube Fischer suggests to hold the glue lines</td>
+</tr>
+<tr>
+<td>Sheet</td>
+<td>one 587 × 166mm sheet of 3mm ply, 25 parts</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Hole</th>
+<th>Down from the top</th>
+<th>Strip</th>
+<th>Cut</th>
+<th>Open up to about</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>back D</td>
+<td>92.5mm</td>
+<td>back</td>
+<td>5.56mm (7/32in)</td>
+<td>7.14mm (9/32in)</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>110mm</td>
+<td>lid</td>
+<td>4.37mm (11/64in)</td>
+<td>5.56mm (7/32in)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>139mm</td>
+<td>lid</td>
+<td>3.57mm (9/64in)</td>
+<td>5.56mm (7/32in)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>172mm</td>
+<td>lid</td>
+<td>4.76mm (3/16in)</td>
+<td>7.14mm (9/32in)</td>
+</tr>
+<tr>
+<td>G</td>
+<td>212mm</td>
+<td>lid</td>
+<td>4.37mm (11/64in)</td>
+<td>4.37mm (11/64in)</td>
+</tr>
+<tr>
+<td>F#</td>
+<td>242mm</td>
+<td>lid</td>
+<td>5.56mm (7/32in)</td>
+<td>7.14mm (9/32in)</td>
+</tr>
+<tr>
+<td>E</td>
+<td>275mm</td>
+<td>lid</td>
+<td>4.37mm (11/64in)</td>
+<td>4.37mm (11/64in)</td>
+</tr>
+<tr>
+<td>E flat</td>
+<td>306mm</td>
+<td>lid</td>
+<td>4.76mm (3/16in)</td>
+<td>6.35–7.14mm (1/4–9/32in)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="building-it">Building it</h2>
+<ol type="1">
+<li>Glue each strip's layers face to face, with drill bits through the holes to line them up.</li>
+<li>Glue the two sides onto the back's bore face, flush with its edges.</li>
+<li>The dishes are engraved when you cut, before the cuts: the images, in Grayscale mode in xTool Creative Space. Depth in ply doesn't follow the grey evenly, and glue lines burn differently from wood, so on scrap from the same sheet, set black to 1.5mm. Burn shallow rather than deep: gouging more out is easy, putting wood back isn't. Fischer's sketch draws the first dish at 58–96mm, not the 30–90mm his text gives. The text is kept here (<code>DISHES</code> in the generator).</li>
+<li>Hold the lid on with silicone. The tenon and collar plates' pins aren't opposite each other, so each plate goes on one way, with its lobe toward the lid.</li>
+<li>Slide the socket on dry, press the tenon and collar together on their pins, and tune by Fischer's method: open the holes from the high notes down, and lift the lid to change the bore.</li>
+<li>When it plays, glue the lid, the socket and the foot, and seal the seams and the bore with shellac.</li>
+</ol>
+<p>The reed is Fischer's: a wide-headed reed on a tubing staple. His article covers that too.</p>
+<h2 id="regenerating">Regenerating</h2>
+<pre><code>python3 uilleann_chanter.py --no-write          # the checks
+python3 uilleann_chanter.py --out=cut-files     # the sheet
+python3 uilleann_chanter.py --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files</code></pre>
+<p>It imports <code>../practice-chanters</code> for the sheet packer and the SVG writer.</p>
+<h2 id="credit">Credit</h2>
+<p>The design is Craig Fischer's: the square bore, the hole positions and drill sizes, the bore enlargements, the tuning method and the reed are all from his article <a href="https://www.daye1.com/bagpage/makepipe/squint1.html">Make a Square Uilleann Pipe Chanter</a> (© 1997 Craig Fischer), hosted by David Daye, who also sells reeds for it. Read the article for the tuning and the reed; this repository only turns his measurements into cut files.</p>
+</main>
+</div>
+<script>
+var r=document.documentElement,b=document.querySelector('.tog');
+function set(t){r.setAttribute('data-theme',t);try{localStorage.setItem('ctg-theme',t)}catch(e){}
+b.textContent=t==='dark'?'\u2600 light':'\u263e dark';}
+var saved=null;try{saved=localStorage.getItem('ctg-theme')}catch(e){}
+set(saved||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+b.addEventListener('click',function(){set(r.getAttribute('data-theme')==='dark'?'light':'dark')});
+</script>
+</body>
+</html>
