@@ -251,8 +251,9 @@ pre,.tw{break-inside:avoid}h1{break-after:avoid}}
 <h2 id="regenerating">Regenerating</h2>
 <pre><code>python3 uilleann_chanter.py --no-write          # the checks
 python3 uilleann_chanter.py --out=cut-files     # the sheet
-python3 uilleann_chanter.py --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files</code></pre>
-<p>It imports <code>../practice-chanters</code> for the sheet packer and the SVG writer.</p>
+python3 uilleann_chanter.py --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
+python3 uilleann_chanter.py --page-to=turn.html # the 3D view</code></pre>
+<p>It imports <code>../practice-chanters</code> for the sheet packer and the SVG writer. This page, <code>index.html</code>, is built from this README, and the sheet's preview from the cut file, by the tools in <a href="https://github.com/Gernreich/lasermade-tools">lasermade-tools</a>. <code>.repro</code> records how each file is drawn, for the gate.</p>
 <h2 id="credit">Credit</h2>
 <p>The design is Craig Fischer's: the square bore, the hole positions and drill sizes, the bore enlargements, the tuning method and the reed are all from his article <a href="https://www.daye1.com/bagpage/makepipe/squint1.html">Make a Square Uilleann Pipe Chanter</a> (© 1997 Craig Fischer), hosted by David Daye, who also sells reeds for it. Read the article for the tuning and the reed; this repository only turns his measurements into cut files.</p>
 </main>

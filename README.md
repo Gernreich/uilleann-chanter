@@ -87,9 +87,13 @@ The reed is Fischer's: a wide-headed reed on a tubing staple. His article covers
 python3 uilleann_chanter.py --no-write          # the checks
 python3 uilleann_chanter.py --out=cut-files     # the sheet
 python3 uilleann_chanter.py --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
+python3 uilleann_chanter.py --page-to=turn.html # the 3D view
 ```
 
-It imports `../practice-chanters` for the sheet packer and the SVG writer.
+It imports `../practice-chanters` for the sheet packer and the SVG writer. This page,
+`index.html`, is built from this README, and the sheet's preview from the cut file,
+by the tools in [lasermade-tools](https://github.com/Gernreich/lasermade-tools).
+`.repro` records how each file is drawn, for the gate.
 
 ## Credit
 
