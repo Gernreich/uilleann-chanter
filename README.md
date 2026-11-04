@@ -103,3 +103,5 @@ bore enlargements, the tuning method and the reed are all from his article
 (© 1997 Craig Fischer), hosted by David Daye, who also sells reeds for it. Read the
 article for the tuning and the reed; this repository only turns his measurements into
 cut files.
+
+This repository is written by Michael Gernreich with [Claude](https://www.anthropic.com/claude) (Anthropic), working in Claude Code, which co-wrote the generator and the documentation. Commits Claude made carry a `Co-Authored-By: Claude` line.
