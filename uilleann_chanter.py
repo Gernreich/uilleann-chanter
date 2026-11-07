@@ -421,12 +421,22 @@ def placed(p, info):
     }[p.strip]
 
 
+
+def turn3d(path, title, designs, note, by, spin=False):
+    """Write the 3D page with lasermade-tools' turn3d program (Rust), which
+    expects that checkout beside this one, built. Each part is {'o', 'h',
+    'e'} with its placing matrix 'm' (or a list of matrices, chained), its
+    explode direction 'x' and its wood 'w'."""
+    import json
+    import subprocess
+    spec = {'title': title, 'note': note, 'by': by, 'spin': spin, 'designs': designs}
+    exe = os.path.join(HERE, '..', 'lasermade-tools', 'target', 'release', 'turn3d')
+    subprocess.run([exe, '--out=' + path], input=json.dumps(spec).encode(), check=True)
+
 def page(path_out):
     """The 3D view: the strips darker, every part the cut file's outline;
     Explode pulls the lid and back layers and the sides outward and the
     plates apart along the chanter."""
-    sys.path.insert(0, os.path.join(HERE, '..', 'lasermade-tools'))
-    import turn3d as t3
     parts, info = build()
     mid = REF_SOLE / 2
     out = []
@@ -439,8 +449,8 @@ def page(path_out):
         else:
             ex = ((p.x - mid) / 60, 0, 0)
         wood = 'dark' if p.kind == 'strip' else 'ply'
-        out.append(t3.placed({'o': p.outline, 'h': holes, 'e': []}, placed(p, info), ex, wood))
-    t3.write(path_out, 'Uilleann chanter in 3D',
+        out.append({'o': p.outline, 'h': holes, 'e': [], 'm': placed(p, info), 'x': ex, 'w': wood})
+    turn3d(path_out, 'Uilleann chanter in 3D',
              {'square bore': {'parts': out, 'ex': 60, 'view': [-0.12, 0.32, 3.0]}},
              'Drag to turn; right-drag, shift-drag or move two fingers to slide the view; '
              'scroll or pinch to zoom in on whatever is under the pointer; double-click a part '
