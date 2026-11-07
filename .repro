@@ -1,13 +1,13 @@
 # How every shipped SVG and page in this repository is drawn. Checked by
 # lasermade-tools' repro-svg; $OUT is where the file must be written.
 #
-# uilleann_chanter.py names its own sheet, so it writes into $OUT's directory
-# and the tool compares the file it asked for. It imports practice_chanters.py
-# and chanter_model.py from the practice-chanters checkout beside this one,
-# and through them square-flute, four-hole-ocarinas and swept-curve;
-# the 3D page is written by lasermade-tools' turn3d program (built).
+# uilleann_chanter is Rust (repro-svg builds the crate first) and names its
+# own sheet, so it writes into $OUT's directory and the tool compares the
+# file it asked for. The crate builds on practice-chanters, square-flute and
+# lasermade-tools, and through practice-chanters on four-hole-ocarinas,
+# swept-curve and bore-tmm, all checked out beside this one.
 
-cut-files/uilleann-chanter-sheet1-cut-files.svg :: python3 uilleann_chanter.py --out=$(dirname $OUT)
+cut-files/uilleann-chanter-sheet1-cut-files.svg :: target/release/uilleann_chanter --out=$(dirname $OUT)
 previews/uilleann-chanter-sheet1-cut-files.svg :: ../lasermade-tools/target/release/make-preview cut-files/uilleann-chanter-sheet1-cut-files.svg $OUT
-turn.html :: python3 uilleann_chanter.py --page-to=$OUT
+turn.html :: target/release/uilleann_chanter --page-to=$OUT
 index.html :: ../lasermade-tools/target/release/md2html README.md $OUT

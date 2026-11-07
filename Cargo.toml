@@ -1,0 +1,23 @@
+[package]
+name = "uilleann-chanter"
+version = "0.1.0"
+edition = "2021"
+authors = ["Michael Gernreich", "Claude (Anthropic) <noreply@anthropic.com>"]
+description = "Cut files for an uilleann pipe chanter: Craig Fischer's square bore in strips of ply"
+publish = false
+autobins = false
+
+# It borrows from the checkouts beside this one: practice-chanters' model,
+# geometry and packing, the square flute's part and kerf, the system's
+# zlib for the engraves' PNGs, and lasermade-tools for the 3D page.
+[[bin]]
+name = "uilleann_chanter"
+path = "uilleann_chanter.rs"
+
+[dependencies]
+practice-chanters = { path = "../practice-chanters" }
+lasermade-tools = { path = "../lasermade-tools" }
+square-flute = { path = "../square-flute" }
+
+[profile.release]
+opt-level = 3

@@ -84,13 +84,19 @@ The reed is Fischer's: a wide-headed reed on a tubing staple. His article covers
 ## Regenerating
 
 ```
-python3 uilleann_chanter.py --no-write          # the checks
-python3 uilleann_chanter.py --out=cut-files     # the sheet
-python3 uilleann_chanter.py --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
-python3 uilleann_chanter.py --page-to=turn.html # the 3D view
+cargo build --release                                # once, and after any change
+target/release/uilleann_chanter --no-write          # the checks
+target/release/uilleann_chanter --out=cut-files     # the sheet
+target/release/uilleann_chanter --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
+target/release/uilleann_chanter --page-to=turn.html # the 3D view
+target/release/uilleann_chanter --bores             # what bore-tmm reads of its bore
 ```
 
-It imports `../practice-chanters` for the sheet packer and the SVG writer. This page,
+The generator, `uilleann_chanter.rs`, is Rust since 2026-11-07, and Python before that:
+the move changed no byte of the cut file or the page. It builds on `../practice-chanters`
+for the sheet packer and the SVG writer, and on `../square-flute` and
+`../lasermade-tools` beside it; the engraves' PNGs are compressed by the system's zlib,
+as Python's were. `Cargo.toml` and `Cargo.lock` are the crate and its pinned build. This page,
 `index.html`, is built from this README, and the sheet's preview from the cut file,
 by the tools in [lasermade-tools](https://github.com/Gernreich/lasermade-tools).
 `.repro` records how each file is drawn, for the gate.
