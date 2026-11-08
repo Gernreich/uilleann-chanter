@@ -101,6 +101,18 @@ as Python's were. `Cargo.toml` and `Cargo.lock` are the crate and its pinned bui
 by the tools in [lasermade-tools](https://github.com/Gernreich/lasermade-tools).
 `.repro` records how each file is drawn, for the gate.
 
+## STEP files
+
+`step/` holds the 3D view as STEP files, one per design, to open or import in a
+CAD program such as SolidCraft, Fusion or FreeCAD: one solid body per part, in
+millimetres, assembled as the view shows it. Every face is flat, so a curve comes
+in as short straight runs; engraving has no depth and is left out. They are written from `turn.html` by
+lasermade-tools' `step-export`, and `.repro` checks them:
+
+```
+../lasermade-tools/target/release/step-export turn.html --name=uilleann-chanter
+```
+
 ## Credit
 
 The design is Craig Fischer's: the square bore, the hole positions and drill sizes, the
