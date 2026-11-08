@@ -113,6 +113,10 @@ lasermade-tools' `step-export`, and `.repro` checks them:
 ../lasermade-tools/target/release/step-export turn.html --name=uilleann-chanter
 ```
 
+The files:
+
+- `step/uilleann-chanter-square-bore.step`
+
 ## Credit
 
 The design is Craig Fischer's: the square bore, the hole positions and drill sizes, the
