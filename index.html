@@ -99,7 +99,7 @@ pre,.tw{break-inside:avoid}h1{break-after:avoid}}
 <body>
 <button class="tog" type="button">theme</button>
 <div class="wrap">
-<nav><b>Contents</b><a class="l1" href="#uilleann-chanter">Uilleann chanter</a><a class="l2" href="#the-chanter">The chanter</a><a class="l2" href="#building-it">Building it</a><a class="l2" href="#regenerating">Regenerating</a><a class="l2" href="#step-files">STEP files</a><a class="l2" href="#credit">Credit</a></nav>
+<nav><b>Contents</b><a class="l1" href="#uilleann-chanter">Uilleann chanter</a><a class="l2" href="#the-chanter">The chanter</a><a class="l2" href="#building-it">Building it</a><a class="l2" href="#regenerating">Regenerating</a><a class="l2" href="#solidcraft-design">SolidCraft design</a><a class="l2" href="#step-files">STEP files</a><a class="l2" href="#credit">Credit</a></nav>
 <main>
 <h1 id="uilleann-chanter">Uilleann chanter</h1>
 <p><strong><a href="https://gernreich.github.io/" target="_blank" rel="noopener">← All projects</a></strong></p>
@@ -254,11 +254,70 @@ target/release/uilleann_chanter --no-write          # the checks
 target/release/uilleann_chanter --out=cut-files     # the sheet
 target/release/uilleann_chanter --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
 target/release/uilleann_chanter --page-to=turn.html # the 3D view
+target/release/uilleann_chanter --solidcraft=solidcraft # the SolidCraft design
 target/release/uilleann_chanter --bores             # what bore-tmm reads of its bore</code></pre>
-<p>The generator, <code>uilleann_chanter.rs</code>, is Rust since 2026-11-07, and Python before that: the move changed no byte of the cut file or the page. It builds on <code>../practice-chanters</code> for the sheet packer and the SVG writer, and on <code>../square-flute</code> and <code>../lasermade-tools</code> beside it; the engraves' PNGs are compressed by the system's zlib, as Python's were. <code>Cargo.toml</code> and <code>Cargo.lock</code> are the crate and its pinned build. This page, <code>index.html</code>, is built from this README, and the sheet's preview from the cut file, by the tools in <a href="https://github.com/Gernreich/lasermade-tools" target="_blank" rel="noopener">lasermade-tools</a>. <code>.repro</code> records how each file is drawn, for the gate.</p>
+<p>The generator, <code>uilleann_chanter.rs</code>, is Rust since 2026-11-07, and Python before that: the move changed no byte of the cut file or the page. It builds on <code>../practice-chanters</code> for the sheet packer and the SVG writer, and on <code>../square-flute</code> and <code>../lasermade-tools</code> beside it; the engraves' PNGs are compressed by the system's zlib, as Python's were. <code>uilleann_solidcraft.rs</code> writes the SolidCraft design into <code>solidcraft/</code>. <code>Cargo.toml</code> and <code>Cargo.lock</code> are the crate and its pinned build. This page, <code>index.html</code>, is built from this README, and the sheet's preview from the cut file, by the tools in <a href="https://github.com/Gernreich/lasermade-tools" target="_blank" rel="noopener">lasermade-tools</a>. <code>.repro</code> records how each file is drawn, for the gate.</p>
+<h2 id="solidcraft-design">SolidCraft design</h2>
+<p><code>uilleann_chanter --solidcraft=solidcraft</code> also writes the chanter as a parametric SolidCraft design: Fischer's figures are its parameters, so changing one number rebuilds the rest. Open <code>solidcraft/uilleann-chanter-square-bore.sc</code> in SolidCraft. The parameters are under the <strong>SOLID</strong> tab, <strong>MODIFY</strong> panel, <strong>Change Parameters</strong>; the Browser lists the parts and the timeline every step. <code>solidcraft/uilleann-chanter-square-bore.solidcraft.json</code> is the script it was built from (<code>solidcraft-cli run FILE --save NAME.sc</code>). The <code>.sc</code> holds the design without SolidCraft's build cache, which it rebuilds on opening, so it is the same file every time.</p>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ply</code></td>
+<td>3 mm</td>
+<td>every strip layer and plate, as <code>--plate=</code></td>
+</tr>
+<tr>
+<td><code>ref_top</code> · <code>sole_side</code> · <code>sole</code></td>
+<td>3.7 · 11.5 · 365 mm</td>
+<td>Fischer's square bore, at the top and the sole, and its length</td>
+</tr>
+<tr>
+<td><code>throat</code> · <code>seat_top</code> · <code>reamer</code></td>
+<td>5.16 · 7 mm · 0.153</td>
+<td>the throat, the reed's seat at the top, and the reamer's taper down to the throat</td>
+</tr>
+<tr>
+<td><code>tenon_d</code> · <code>collar_d</code> · <code>foot_d</code></td>
+<td>17 · 30 · 38 mm</td>
+<td>the tenon for your stock (<code>--tenon=</code>), the collar and socket, the foot</td>
+</tr>
+<tr>
+<td><code>sock_clear</code></td>
+<td>0.1 mm</td>
+<td>the socket's and foot's clearance each side of the strips</td>
+</tr>
+<tr>
+<td><code>z_1</code> … <code>z_8</code> · <code>d_1</code> … <code>d_8</code></td>
+<td>Fischer's</td>
+<td>each hole down from the top, D′ first, and its starting drill</td>
+</tr>
+<tr>
+<td><code>dish_z0</code> · <code>dish_z1</code> · <code>dish_deep</code> · <code>dish_edge</code></td>
+<td>30 · 90 · 1.5 · 0.3 mm</td>
+<td>the first dish, which reaches up into the tenon and collar plates as a lobe on their bore</td>
+</tr>
+<tr>
+<td><code>pin</code> · <code>pin_interf</code></td>
+<td>2 · 0.1 mm</td>
+<td>the tenon's and collar's pins, and their press-fit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The strips lean with the cone, and every one follows the bore, the ply and its layer; the holes go through every layer of their strip. The plates are drawn one by one, each its seat's diameter at its height, so the tenon's 12, the collar's 2, the socket's 2, the foot's 2 and the layers stay those counts. The dishes engraved in the lid have no depth here, as in the 3D view.</p>
+<p><strong>Checked</strong> part by part against the generator's own: all 25 parts match to within 0.04 mm, the sag of the earlier STEP file's straight runs round a circle, and so do they with the ply at 2.9 mm and an 18 mm tenon.</p>
 <h2 id="step-files">STEP files</h2>
-<p><code>step/</code> holds the 3D view as STEP files, one per design, to open or import in a CAD program such as SolidCraft, Fusion or FreeCAD: one solid body per part, in millimetres, assembled as the view shows it. Every face is flat, so a curve comes in as short straight runs; engraving has no depth and is left out. They are written from <code>turn.html</code> by lasermade-tools' <code>step-export</code>, and <code>.repro</code> checks them:</p>
-<pre><code>../lasermade-tools/target/release/step-export turn.html --name=uilleann-chanter</code></pre>
+<p><code>step/</code> holds the SolidCraft design, built by SolidCraft, as a STEP file to open or import in a CAD program such as Fusion or FreeCAD: one solid body per part, in millimetres, assembled, with no parameters. Holes and plates are true circles. <code>.repro</code> checks it:</p>
+<pre><code>target/release/uilleann_chanter --solidcraft=solidcraft
+solidcraft-cli run solidcraft/uilleann-chanter-square-bore.solidcraft.json --out step/uilleann-chanter-square-bore.step</code></pre>
 <p>The files:</p>
 <ul>
 <li><code>step/uilleann-chanter-square-bore.step</code></li>

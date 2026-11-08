@@ -12,6 +12,8 @@ previews/uilleann-chanter-sheet1-cut-files.svg :: ../lasermade-tools/target/rele
 turn.html :: target/release/uilleann_chanter --page-to=$OUT
 index.html :: ../lasermade-tools/target/release/md2html README.md $OUT
 
-# --- the STEP files: the 3D view's parts as solids for a CAD program, one
-# file per design, written from the page by lasermade-tools' step-export ---
-step/uilleann-chanter-square-bore.step :: ../lasermade-tools/target/release/step-export turn.html --name=uilleann-chanter --out=$(dirname $OUT)
+# --- the SolidCraft design: its script, the design (slimmed by sc-slim so it
+# is the same every run), and the STEP file SolidCraft builds from it ---
+solidcraft/uilleann-chanter-square-bore.solidcraft.json :: target/release/uilleann_chanter --solidcraft=$(dirname $OUT)
+solidcraft/uilleann-chanter-square-bore.sc :: target/release/uilleann_chanter --solidcraft=$(dirname $OUT) && solidcraft-cli run $(dirname $OUT)/uilleann-chanter-square-bore.solidcraft.json --save $OUT --quiet && ../lasermade-tools/target/release/sc-slim $OUT
+step/uilleann-chanter-square-bore.step :: target/release/uilleann_chanter --solidcraft=$(dirname $OUT) && solidcraft-cli run $(dirname $OUT)/uilleann-chanter-square-bore.solidcraft.json --out $OUT --quiet

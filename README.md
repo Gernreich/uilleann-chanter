@@ -89,6 +89,7 @@ target/release/uilleann_chanter --no-write          # the checks
 target/release/uilleann_chanter --out=cut-files     # the sheet
 target/release/uilleann_chanter --plate=2.9 --kerf=0.18 --tenon=18 --out=cut-files
 target/release/uilleann_chanter --page-to=turn.html # the 3D view
+target/release/uilleann_chanter --solidcraft=solidcraft # the SolidCraft design
 target/release/uilleann_chanter --bores             # what bore-tmm reads of its bore
 ```
 
@@ -96,21 +97,53 @@ The generator, `uilleann_chanter.rs`, is Rust since 2026-11-07, and Python befor
 the move changed no byte of the cut file or the page. It builds on `../practice-chanters`
 for the sheet packer and the SVG writer, and on `../square-flute` and
 `../lasermade-tools` beside it; the engraves' PNGs are compressed by the system's zlib,
-as Python's were. `Cargo.toml` and `Cargo.lock` are the crate and its pinned build. This page,
+as Python's were. `uilleann_solidcraft.rs` writes the SolidCraft design into `solidcraft/`. `Cargo.toml` and `Cargo.lock` are the crate and its pinned build. This page,
 `index.html`, is built from this README, and the sheet's preview from the cut file,
 by the tools in [lasermade-tools](https://github.com/Gernreich/lasermade-tools).
 `.repro` records how each file is drawn, for the gate.
 
+## SolidCraft design
+
+`uilleann_chanter --solidcraft=solidcraft` also writes the chanter as a parametric
+SolidCraft design: Fischer's figures are its parameters, so changing one number rebuilds
+the rest. Open `solidcraft/uilleann-chanter-square-bore.sc` in SolidCraft. The parameters
+are under the **SOLID** tab, **MODIFY** panel, **Change Parameters**; the Browser lists
+the parts and the timeline every step. `solidcraft/uilleann-chanter-square-bore.solidcraft.json`
+is the script it was built from (`solidcraft-cli run FILE --save NAME.sc`). The `.sc`
+holds the design without SolidCraft's build cache, which it rebuilds on opening, so it
+is the same file every time.
+
+| Parameter | Default | What it is |
+|---|---|---|
+| `ply` | 3 mm | every strip layer and plate, as `--plate=` |
+| `ref_top` · `sole_side` · `sole` | 3.7 · 11.5 · 365 mm | Fischer's square bore, at the top and the sole, and its length |
+| `throat` · `seat_top` · `reamer` | 5.16 · 7 mm · 0.153 | the throat, the reed's seat at the top, and the reamer's taper down to the throat |
+| `tenon_d` · `collar_d` · `foot_d` | 17 · 30 · 38 mm | the tenon for your stock (`--tenon=`), the collar and socket, the foot |
+| `sock_clear` | 0.1 mm | the socket's and foot's clearance each side of the strips |
+| `z_1` … `z_8` · `d_1` … `d_8` | Fischer's | each hole down from the top, D′ first, and its starting drill |
+| `dish_z0` · `dish_z1` · `dish_deep` · `dish_edge` | 30 · 90 · 1.5 · 0.3 mm | the first dish, which reaches up into the tenon and collar plates as a lobe on their bore |
+| `pin` · `pin_interf` | 2 · 0.1 mm | the tenon's and collar's pins, and their press-fit |
+
+The strips lean with the cone, and every one follows the bore, the ply and its layer;
+the holes go through every layer of their strip. The plates are drawn one by one, each
+its seat's diameter at its height, so the tenon's 12, the collar's 2, the socket's 2,
+the foot's 2 and the layers stay those counts. The dishes engraved in the lid have no
+depth here, as in the 3D view.
+
+**Checked** part by part against the generator's own: all 25 parts match to within
+0.04 mm, the sag of the earlier STEP file's straight runs round a circle, and so do
+they with the ply at 2.9 mm and an 18 mm tenon.
+
 ## STEP files
 
-`step/` holds the 3D view as STEP files, one per design, to open or import in a
-CAD program such as SolidCraft, Fusion or FreeCAD: one solid body per part, in
-millimetres, assembled as the view shows it. Every face is flat, so a curve comes
-in as short straight runs; engraving has no depth and is left out. They are written from `turn.html` by
-lasermade-tools' `step-export`, and `.repro` checks them:
+`step/` holds the SolidCraft design, built by SolidCraft, as a STEP file to open or
+import in a CAD program such as Fusion or FreeCAD: one solid body per part, in
+millimetres, assembled, with no parameters. Holes and plates are true circles.
+`.repro` checks it:
 
 ```
-../lasermade-tools/target/release/step-export turn.html --name=uilleann-chanter
+target/release/uilleann_chanter --solidcraft=solidcraft
+solidcraft-cli run solidcraft/uilleann-chanter-square-bore.solidcraft.json --out step/uilleann-chanter-square-bore.step
 ```
 
 The files:

@@ -8,6 +8,7 @@
 //!     target/release/uilleann_chanter --kerf=0.18 ...        # for that kerf
 //!     target/release/uilleann_chanter --tenon=18 ...         # the tenon for your stock
 //!     target/release/uilleann_chanter --page-to=turn.html    # the 3D view
+//!     target/release/uilleann_chanter --solidcraft=DIR       # the SolidCraft design
 //!     target/release/uilleann_chanter --bores                # what bore-tmm reads
 //!
 //! THE REFERENCE is Craig Fischer's "Make a Square Uilleann Pipe Chanter"
@@ -60,6 +61,8 @@ use lasermade_tools::py::{self, g};
 use lasermade_tools::turn3d::{self, Mat, F, I, J};
 use square_flute::{self as sf, kerf, Cut};
 use std::f64::consts::PI;
+
+mod uilleann_solidcraft;
 
 const INCH: f64 = 25.4;
 // --- the reference chanter, Fischer's figures (mm, down from the top) --------
@@ -633,7 +636,7 @@ fn main() {
     if std::env::args().nth(1).as_deref() == Some("--bores") {
         return bores();
     }
-    let (mut out, mut write, mut page_to) = (None::<String>, true, None::<String>);
+    let (mut out, mut write, mut page_to, mut scd) = (None::<String>, true, None::<String>, None::<String>);
     for x in std::env::args().skip(1) {
         let val = || x.split_once('=').unwrap().1.to_string();
         if x == "--no-write" {
@@ -648,9 +651,18 @@ fn main() {
             TENON_D.set(pc::num_arg(&x));
         } else if x.starts_with("--page-to=") {
             page_to = Some(val());
+        } else if x.starts_with("--solidcraft=") {
+            scd = Some(val());
         } else {
-            die(format!("error: {x} is not a flag this generator reads. It takes --out=, --plate=, --kerf=, --tenon=, --page-to= and --no-write."));
+            die(format!("error: {x} is not a flag this generator reads. It takes --out=, --plate=, --kerf=, --tenon=, --page-to=, --solidcraft= and --no-write."));
         }
+    }
+    if let Some(dir) = scd {
+        std::fs::create_dir_all(&dir).unwrap_or_else(|e| die(format!("{dir}: {e}")));
+        let f = "uilleann-chanter-square-bore.solidcraft.json";
+        std::fs::write(format!("{dir}/{f}"), uilleann_solidcraft::script()).unwrap_or_else(|e| die(format!("{dir}/{f}: {e}")));
+        println!("  wrote {f}");
+        return;
     }
     if let Some(pt) = page_to {
         page(&pt);
